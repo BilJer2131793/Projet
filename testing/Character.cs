@@ -8,7 +8,7 @@ using System.Xml.Linq;
 using Humanizer;
 using System.Xml.Serialization;
 
-namespace testing
+namespace Projet
 {
     public enum Prof
     {
@@ -18,12 +18,13 @@ namespace testing
         thief,
         creation
     }
-    public class Character
+    internal class Character
     {
         public string name { get; set; }
         public Prof prof;
         public int maxHP { get; set; }
         public int HP { get; set; }
+        public int Shield { get; set; }
         public int maxMP { get; set; }
         public int MP { get; set; }
         public int str { get; set; }
@@ -32,16 +33,16 @@ namespace testing
         public int def { get; set; }
         public int atk { get; set; }
         public int statPoints { get; set; }
-        public Equipment[] equipment { get; set; }
-        public List<string> inv { get; set; }
+        public Inventory Inv { get; set; }
+        public List<Skill> Skills { get; set; }
 
-        
         public Character(string name, int HP, int MP, int str, int wis, int dex, int def, int atk, Prof prof)
         {
             this.name = name;
-            maxHP = HP; 
+            maxHP = HP;
             this.HP = HP;
             maxMP = MP;
+            Shield = 0;
             this.MP = MP;
             this.str = str;
             this.wis = wis;
@@ -49,12 +50,12 @@ namespace testing
             this.def = def;
             this.atk = atk;
             this.prof = prof;
-            equipment = new Equipment[5];
-            inv = new List<string>();
+            Inv = new Inventory();
+            Skills = new List<Skill>();
         }
         public Character(string name)
         {
-            this.name=name;
+            this.name = name;
             maxHP = 0;
             HP = 0;
             maxMP = 0;
@@ -66,8 +67,8 @@ namespace testing
             atk = 0;
             prof = Prof.creation;
 
-            inv = new List<string>();
-            equipment = new Equipment[5];
+            Inv = new Inventory();
+            Skills = new List<Skill>();
         }
         public Character()
         {
@@ -79,10 +80,11 @@ namespace testing
             $"NOM       : {{{PC.name}}}\n" +
             $"CLASSE    : {{{PC.prof.Humanize()}}}\n" +
             $"PV        : {{{PC.HP}}}\n" +
-            $"Arme      : " +
-            $"ARMURE    : " +
-            $"BOUCLIER  : " +
-            $"HEAUME    : " +
+            $"Main D    : {{{PC.Inv.RightHand}}}\n" +
+            $"Main G    : {{{PC.Inv.LeftHand}}}\n" +
+            $"HEAUME    : {{{PC.Inv.Head}}}\n" +
+            $"ARMURE    : {{{PC.Inv.Chestpiece}}}\n" +
+            $"Bottes    : {{{PC.Inv.Boots}}}\n" +
             $"EQUIPEMENT: {{}} \n";
         }
         public override string ToString()
@@ -105,11 +107,10 @@ namespace testing
             $"HEAUME    : \n" +
             $"EQUIPEMENT: {{}} \n"; ;
         }
-
         public Character CharacterCreator(string name)
         {
 
-            int HP=0; int MP = 0; int str = 0; int wis = 0; int dex = 0; int def = 0; int atk = 0;
+            int HP = 0; int MP = 0; int str = 0; int wis = 0; int dex = 0; int def = 0; int atk = 0;
             Prof newProf;
             int choix = SelectProfession();
             switch (choix)
@@ -140,6 +141,8 @@ namespace testing
                     dex = 13;
                     def = 3;
                     atk = 2;
+                    Skills.Add(new ATKSkill(5,"Charge", "Charge",0, false, 1));
+                    Skills.Add(new SUPSkill(Effect.Shield,5, "Defense", "Defense", 2, false, 1));
                     break;
                 case Prof.archer:
                     HP = 16;
@@ -149,6 +152,8 @@ namespace testing
                     dex = 17;
                     def = 0;
                     atk = 2;
+                    Skills.Add(new ATKSkill(4, "Tir", "Tir", 0, false, 1));
+                    Skills.Add(new ATKSkill(4, "Gros Tir", "Gros Tir", 3, true, 1));
                     break;
                 case Prof.mage:
                     HP = 14;
@@ -158,6 +163,9 @@ namespace testing
                     dex = 13;
                     def = 0;
                     atk = 0;
+                    Skills.Add(new ATKSkill(3, "Frappe", "Frappe", 0, false, 1));
+                    Skills.Add(new ATKSkill(6, "Feu", "Feu", 4, false, 1));
+                    Skills.Add(new SUPSkill(Effect.Heal, 4, "Heal", "Heal", 3, false, 1));
                     break;
                 case Prof.thief:
                     HP = 15;
@@ -167,9 +175,11 @@ namespace testing
                     dex = 17;
                     def = 0;
                     atk = 3;
+                    Skills.Add(new ATKSkill(6, "Poignard", "Poignard", 0, false, 1));
                     break;
             }
             return new Character(name, HP, MP, str, wis, dex, def, atk, newProf);
+
 
         }
         public int SelectProfession()
@@ -189,26 +199,9 @@ namespace testing
                     ok = false;
                     Console.WriteLine($"{choix} is not a valid Profession");
                 }
-            }while (!ok);
+            } while (!ok);
 
             return choix;
-        }
-        public Character LoadCharacter(string filepath)
-        {
-
-            XmlSerializer ser = new XmlSerializer(typeof(Character));
-            using (StreamReader sr = new StreamReader(filepath))
-            {
-                return (Character)ser.Deserialize(sr);
-            }
-        }
-        public void Serialize(string path, Character p)
-        {
-            System.Xml.Serialization.XmlSerializer x = new System.Xml.Serialization.XmlSerializer(p.GetType());
-            File.WriteAllText(path, x + Environment.NewLine);
-            TextWriter textWriter = new StreamWriter(path);
-            x.Serialize(textWriter, p);
-            textWriter.Close();
         }
     }
 }

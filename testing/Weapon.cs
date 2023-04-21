@@ -4,9 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace testing
+namespace Projet
 {
-    internal class Armament : Equipment
+    internal class Weapon : Item
     {
+        public Weapon(string name):base(name)
+        {
+
+        }
+
+
+
     }
 }

@@ -4,9 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace testing
+namespace Projet
 {
-    internal class Armor : Equipment
+    internal class Armor : Item
     {
+
+        public Armor(string name) : base(name)
+        {
+
+        }
     }
 }

@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace testing
+namespace Projet
 {
     internal class Consumable : Item
     {
+        public Consumable(string name):base(name)
+        {
 
+        }
 
         
     }

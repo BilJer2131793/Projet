@@ -4,9 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace testing
+namespace Projet
 {
     internal class Item
     {
+        public String Name { get; set; }
+        public Item(string name)
+        {
+            Name = name;
+        }
     }
 }
