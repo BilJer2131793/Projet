@@ -31,6 +31,7 @@ namespace testing
         public int dex { get; set; }
         public int def { get; set; }
         public int atk { get; set; }
+        public int statPoints { get; set; }
         public Equipment[] equipment { get; set; }
         public List<string> inv { get; set; }
 

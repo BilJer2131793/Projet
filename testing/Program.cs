@@ -32,7 +32,7 @@ namespace testing
         {
             Character PC = new Character();
             Console.WriteLine("Please select your profile");
-            string filePath = CD + @"\Savefiles\";
+            string filePath = CD + @"\SaveFiles\";
             string[] fileEntries = Directory.GetFiles(filePath);
             int i = 0;
             while(i < fileEntries.Length)
@@ -72,6 +72,11 @@ namespace testing
         {
             PC.Serialize(curFile, PC);
         }
+        static void UpdateStats()
+        {
+
+        }
+
         static void UpdateNode(string file)
         {
             XDocument doc = XDocument.Load(file);
